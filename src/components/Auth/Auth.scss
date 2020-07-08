@@ -1,0 +1,58 @@
+.login-form-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container,
+.link-container {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.link-container {
+    margin-top: 20px;
+}
+
+.github-link {
+    font-size: 16px;
+    line-height: 20px;
+    color: #999;
+    transition: all 0.3s ease-in;
+    text-decoration: none;
+
+    &:hover {
+        color: #0d0d0d;
+    }
+}
+
+.login-form-container {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 520px;
+}
+
+.form-container {
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 40px 30px;
+
+    h3 {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: normal;
+    }
+
+    .btn {
+        margin-top: 20px;
+    }
+}

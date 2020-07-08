@@ -1,0 +1,3 @@
+export const COMMON_SET_TITLE = `COMMON_SET_TITLE`;
+
+export const AUTH_SET_TOKEN = `AUTH_SET_TOKEN`;

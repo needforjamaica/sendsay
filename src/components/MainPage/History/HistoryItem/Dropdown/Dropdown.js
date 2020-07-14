@@ -95,6 +95,7 @@ export default function (props) {
                 <li className={`dropdown-menu__item-container`}>
                     <button className={`dropdown-menu__item dropdown-menu__item_default button-link js-copy-button`}>Скопировать</button>
                 </li>
+                <li className={`dropdown-menu__item-container dropdown-menu__item-divider`}></li>
                 <li className={`dropdown-menu__item-container dropdown-menu__item-container_border-top`}>
                     <button className={`dropdown-menu__item dropdown-menu__item_danger button-link js-delete-button`}>Удалить</button>
                 </li>

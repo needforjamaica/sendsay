@@ -9,6 +9,7 @@
     box-sizing: border-box;
     padding: 10px 15px 15px 15px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    background: white;
 
     &__label {
         margin-top: 0;
@@ -61,9 +62,10 @@
     align-items: center;
     justify-content: space-between;
     padding-left: 15px;
+    background: white;
 
     &__btn {
-        min-width: 125px;
+        width: 120px;
     }
 
     &__format-link {

@@ -48,7 +48,7 @@ export default (props) => {
                     <form onSubmit={handleSubmit(submitHandler)}>
                         {authState.error ? (
                             <div className={`sign-in-error-block`}>
-                                <div className={`sign-in-error-block__icon-block`}></div>
+                                <div className={`sign-in-error-block__icon icon-meh`}></div>
                                 <div>
                                     <div className={`sign-in-error-block__title`}>Вход не вышел</div>
                                     <div className={`sign-in-error-block__text`}>{authState.error}</div>

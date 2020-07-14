@@ -1,4 +1,4 @@
-import {AUTH_SET_DATA} from './actionTypes';
+import {AUTH_SET_DATA, CONSOLE_SET_REQUEST_ERROR, CONSOLE_SET_RESPONSE_ERROR} from './actionTypes';
 import {store} from 'react-notifications-component';
 import Cookies from 'js-cookie';
 import Sendsay from 'sendsay-api';
@@ -11,6 +11,8 @@ export function setAuthToken(token) {
 
 export function signOut() {
     return (dispatch) => {
+        dispatch({type: CONSOLE_SET_RESPONSE_ERROR, payload: false});
+        dispatch({type: CONSOLE_SET_REQUEST_ERROR, payload: false});
         dispatch(setAuthToken({userToken: null, login: null, sublogin: null, error: null, loading: false}));
         Cookies.remove(`userToken`);
         Cookies.remove(`login`);

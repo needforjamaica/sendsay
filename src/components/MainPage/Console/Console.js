@@ -64,7 +64,7 @@ export default function () {
             setValue(`response`, consoleState.response);
             dispatch(setResponse(``));
         }
-    }, [consoleState]);
+    }, [consoleState, dispatch, setValue]);
 
     const submitHandler = (data) => {
         if (data.request) {

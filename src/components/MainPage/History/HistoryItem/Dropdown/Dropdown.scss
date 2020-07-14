@@ -82,8 +82,11 @@
     right: 27px;
     display: none;
     overflow: hidden;
+    width: calc(100% - 50px);
+    min-width: 90px;
     align-items: center;
     justify-content: center;
+    border-radius: 5px;
 
     &.copied-container_active {
         display: flex;
@@ -91,12 +94,16 @@
     }
 
     .copied-container__text {
+        display: inline-block;
+        overflow: hidden;
+        width: 100%;
         padding: 0 5px;
         background: #f6f6f6;
         border-radius: 5px;
         font-size: 12px;
         line-height: 20px;
         text-align: center;
+        text-overflow: ellipsis;
     }
 }
 

@@ -25,6 +25,7 @@
 
     &__clear-history {
         position: absolute;
+        z-index: 10;
         right: 0;
         display: flex;
         width: 50px;

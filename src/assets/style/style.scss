@@ -27,6 +27,10 @@ body {
 
 a {
     text-decoration: none;
+
+    &:active {
+        outline: none;
+    }
 }
 
 .content-wrapper {
@@ -74,7 +78,7 @@ a {
     &:hover {
         color: #0055fb;
 
-        &__icon {
+        .black-blue-link__icon {
             background-color: #0055fb;
         }
     }
@@ -85,7 +89,7 @@ a {
         color: #0055fb;
         outline: none;
 
-        &__icon {
+        .black-blue-link__icon {
             background-color: #0055fb;
         }
     }

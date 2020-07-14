@@ -79,6 +79,7 @@ export default function (props) {
 
     useEffect(() => {
         document.getElementById(`js-dropdown-trigger-${props.request.requestId}`).addEventListener(`click`, show);
+        // eslint-disable-next-line
     }, []);
 
     return (

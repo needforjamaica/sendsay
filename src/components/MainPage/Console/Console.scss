@@ -1,0 +1,80 @@
+@import '../../../assets/style/variables';
+
+.console-container {
+    top: 100px;
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 172px);
+    min-height: 350px;
+    box-sizing: border-box;
+    padding: 10px 15px 15px 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+
+    &__label {
+        margin-top: 0;
+        margin-bottom: 3px;
+        color: #999;
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    &__textarea {
+        height: calc(100% - 23px);
+        box-sizing: border-box;
+        padding: 10px;
+        margin: 0;
+        color: $black;
+        font-family: 'Roboto Mono';
+        font-size: 14px;
+        line-height: 18px;
+        resize: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.split {
+    display: flex;
+    width: 100%;
+
+    .gutter {
+        width: 10px;
+        margin-top: 23px;
+        background-color: rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        mask-image: url("../../../assets/img/drag.svg");
+        mask-position: center;
+        mask-repeat: no-repeat;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    }
+}
+
+.console-actions {
+    position: relative;
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 15px;
+
+    &__btn {
+        min-width: 125px;
+    }
+
+    &__format-link {
+        padding: 23px 15px;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .format-link {
+        &__icon {
+            margin-right: 8px;
+        }
+    }
+}

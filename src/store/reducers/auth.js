@@ -1,20 +1,25 @@
-import {AUTH_SET_TOKEN} from '../actions/actionTypes';
+import {AUTH_SET_DATA} from '../actions/actionTypes';
 import Cookies from 'js-cookie';
 
 const initialState = {
-    token: null,
-    email: null,
+    userToken: null,
+    login: null,
+    sublogin: null,
+    error: null,
+    loading: false,
+    signingIn: false,
 };
 
 if (Cookies.get(`userToken`)) {
-    initialState.token = Cookies.get(`userToken`);
-    initialState.email = Cookies.get(`email`);
+    initialState.userToken = Cookies.get(`userToken`);
+    initialState.login = Cookies.get(`login`);
+    initialState.sublogin = Cookies.get(`sublogin`);
 }
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case AUTH_SET_TOKEN:
-            return {...state, ...action.data};
+        case AUTH_SET_DATA:
+            return {...state, ...action.payload};
         default:
             return state;
     }

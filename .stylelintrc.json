@@ -1,5 +1,8 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-idiomatic-order"
+  ],
   "plugins": [
     "stylelint-order"
   ],
@@ -10,14 +13,6 @@
         "message": "Please use 4 spaces for indentation.",
         "severity": "warning"
       }
-    ],
-    "order/order": [
-      "custom-properties",
-      "declarations"
-    ],
-    "order/properties-order": [
-      "width",
-      "height"
     ]
   }
 }

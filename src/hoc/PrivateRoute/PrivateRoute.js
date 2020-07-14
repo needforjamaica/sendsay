@@ -18,7 +18,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
                     animationIn: [`animate__animated`, `animate__fadeIn`],
                     animationOut: [`animate__animated`, `animate__fadeOut`],
                     dismiss: {
-                        duration: 4000,
+                        duration: 3000,
                         onScreen: true,
                     },
                     onRemoval: () => {
@@ -26,18 +26,12 @@ const PrivateRoute = ({component: Component, ...rest}) => {
                     },
                 });
             }
+            if (rest.redirect === `/`) {
+                rest.history.push(rest.redirect);
+            }
         }
         // eslint-disable-next-line
     }, [rest.condition]);
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                rest.condition ? (
-                    <Component {...props} />
-                ) : null
-            }
-        />
-    );
+    return <Route {...rest} render={(props) => (rest.condition ? <Component {...props} /> : null)} />;
 };
 export default withRouter(PrivateRoute);

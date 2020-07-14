@@ -1,76 +1,68 @@
-import {AUTH_SET_TOKEN} from './actionTypes';
+import {AUTH_SET_DATA} from './actionTypes';
 import {store} from 'react-notifications-component';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import Sendsay from 'sendsay-api';
 
 export function setAuthToken(token) {
     return (dispatch) => {
-        dispatch({type: AUTH_SET_TOKEN, data: token});
+        dispatch({type: AUTH_SET_DATA, payload: token});
     };
 }
 
 export function signOut() {
     return (dispatch) => {
-        dispatch(setAuthToken({token: null, email: null}));
+        dispatch(setAuthToken({userToken: null, login: null, sublogin: null, error: null, loading: false}));
         Cookies.remove(`userToken`);
-        Cookies.remove(`email`);
+        Cookies.remove(`login`);
+        Cookies.remove(`sublogin`);
     };
 }
 
-export const signUp = (data, history) => {
-    return async (dispatch, getState) => {
-        const authData = {
-            email: data.email,
-            password: data.password,
-        };
-        try {
-            await axios.post(process.env.REACT_APP_SIGN_UP_URL, authData);
-            dispatch(signIn(authData, history));
-        } catch (e) {
-            store.addNotification({
-                title: `Что-то пошло не так!`,
-                message: e.toString(),
-                type: `danger`,
-                insert: `top`,
-                container: `center`,
-                animationIn: [`animate__animated`, `animate__bounceIn`],
-                animationOut: [`animate__animated`, `animate__bounceOut`],
-                dismiss: {
-                    duration: 3000,
-                    onScreen: true,
-                },
-            });
-        }
-    };
-};
-
 export const signIn = (data, history) => {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
+        dispatch(setAuthToken({loading: true}));
+        const sendsay = new Sendsay();
         const authData = {
-            email: data.email,
+            login: data.login,
             password: data.password,
-            returnSecureToken: true,
         };
-        const response = await axios.post(process.env.REACT_APP_SIGN_IN_URL, authData);
-        const inAnHour = new Date(new Date().getTime() + 60 * 60 * 1000);
-        Cookies.set(`userToken`, response.data.idToken, {expires: inAnHour});
-        Cookies.set(`email`, response.data.email, {expires: inAnHour});
-        store.addNotification({
-            title: `Успешно!`,
-            message: `Перенаправляем...`,
-            type: `success`,
-            insert: `top`,
-            container: `center`,
-            animationIn: [`animate__animated`, `animate__bounceIn`],
-            animationOut: [`animate__animated`, `animate__bounceOut`],
-            dismiss: {
-                duration: 2000,
-                onScreen: true, 
-            },
-            onRemoval: () => {
-                dispatch(setAuthToken({token: response.data.idToken, email: response.data.email}));
-                history.push(`/`);
-            },
-        });
+        if (data.sublogin) {
+            authData.sublogin = data.sublogin;
+        }
+        sendsay
+            .login(authData)
+            .then(() => {
+                const inAnHour = new Date(new Date().getTime() + 60 * 60 * 1000);
+                Cookies.set(`userToken`, sendsay.session, {expires: inAnHour});
+                Cookies.set(`login`, data.login, {expires: inAnHour});
+                Cookies.set(`sublogin`, data.sublogin, {expires: inAnHour});
+                dispatch(setAuthToken({signingIn: true}));
+                store.addNotification({
+                    title: `Успешно!`,
+                    message: `Перенаправляем...`,
+                    type: `success`,
+                    insert: `top`,
+                    container: `center`,
+                    animationIn: [`animate__animated`, `animate__bounceIn`],
+                    animationOut: [`animate__animated`, `animate__bounceOut`],
+                    dismiss: {
+                        duration: 1500,
+                        onScreen: true,
+                    },
+                    onRemoval: () => {
+                        dispatch(setAuthToken({userToken: sendsay.session, login: data.login, sublogin: data.sublogin, error: null, loading: false, signingIn: false}));
+                        history.push(`/`);
+                    },
+                });
+            })
+            .catch((error) => {
+                const publicResponse = {id: error.id, explain: error.explain};
+                dispatch(
+                    setAuthToken({
+                        error: JSON.stringify(publicResponse).replace(`"id"`, `id`).replace(`"explain"`, `explain`).replace(`,`, `, `),
+                        loading: false,
+                    })
+                );
+            });
     };
 };

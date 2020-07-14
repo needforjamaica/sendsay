@@ -1,98 +1,105 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';
-import {ErrorMessage} from '@hookform/error-message';
 import {useDispatch} from 'react-redux';
 import {setPageTitle} from '../../store/actions/common';
-import {signUp, signIn} from '../../store/actions/auth';
+import {signIn} from '../../store/actions/auth';
 import './Auth.scss';
+
 export default (props) => {
-    const [state, setState] = useState({
-        action: `signIn`,
-    });
-
-    const {register, handleSubmit, errors} = useForm({
-        defaultValues: {
-            login: ``,
-            sublogin: ``,
-            password: ``,
-        },
-    });
-
     const dispatch = useDispatch();
+    const authState = useSelector((state) => state.auth);
+    // eslint-disable-next-line
+    const [loginValue, setLoginValue] = useState(``);
 
-    useEffect(() => {
-        dispatch(setPageTitle(`Auth`));
-    }, [dispatch]);
+    const {register, handleSubmit, errors, formState, getValues} = useForm();
 
-    const setAction = (action) => {
-        setState({...state, action: action});
+    const loginValidator = () => {
+        if (formState.isSubmitting || formState.isSubmitted) {
+            let regexp = /^\w+$/i;
+            if (getValues().login.match(`@`)) {
+                regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            }
+            if (!regexp.test(getValues().login)) {
+                errors.login = `Login invalid`;
+            }
+        }
+        setLoginValue(getValues().login);
     };
 
+    useEffect(() => {
+        dispatch(setPageTitle(`Войдите!`));
+    }, [dispatch]);
+
     const submitHandler = (data) => {
-        if (state.action === `signIn`) {
+        if (Object.keys(errors).length === 0) {
             dispatch(signIn(data, props.history));
-        } else if (state.action === `signUp`) {
-            dispatch(signUp(data, props.history));
         }
     };
 
-    return (
+    return authState.signingIn ? null : (
         <div className={`login-form-wrapper`}>
             <div className={`login-form-container`}>
-                <div className={`logo-container`}>
+                <div className={`login-form-container__logo-container`}>
                     <div className={`logo`}></div>
                 </div>
-                <div className={`form-container`}>
-                    <h3>API-консолька</h3>
+                <div className={`login-form-container__form-container login-form`}>
+                    <h3 className={`login-form__title`}>API-консолька</h3>
                     <form onSubmit={handleSubmit(submitHandler)}>
-                        <div className={`form-group`}>
-                            <label htmlFor={`login`} className={errors.login ? `error` : null}>
-                                Логин
-                            </label>
-                            <input
-                                type={`text`}
-                                className={`form-control ${errors.login ? `error` : null}`}
-                                id={`login`}
-                                name={`login`}
-                                autoComplete={`off`}
-                                ref={register({
-                                    required: `Пожалуйста укажите логин`,
-                                    pattern: {
-                                        value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                        message: `Email is invalid`,
-                                    },
-                                })}
-                            />
-                            <ErrorMessage errors={errors} name={`login`} as={`span`} className={`error`} />
-                        </div>
-                        <div className={`form-group`}>
-                            <label htmlFor={`sublogin`} className={`optional ${errors.sublogin ? `error` : null}`}>
-                                Сублогин
-                            </label>
-                            <input type={`text`} className={`form-control ${errors.sublogin ? `error` : null}`} id={`sublogin`} name={`sublogin`} autoComplete={`off`} />
-                            <ErrorMessage errors={errors} name={`sublogin`} as={`span`} className={`error`} />
-                        </div>
-                        <div className={`form-group`}>
-                            <label htmlFor={`password`} className={errors.password ? `error` : null}>
-                                Пароль
-                            </label>
-                            <input type={`password`} className={`form-control ${errors.password ? `error` : null}`} id={`password`} name={`password`} autoComplete={`off`} ref={register({required: `Пожалуйста, укажите пароль`})} />
-                            <ErrorMessage errors={errors} name={`password`} as={`span`} className={`error`} />
-                        </div>
-                        <a href='#' className={`btn btn-primary`}>
-                            <span>Войти</span>
-                        </a>
-                        {/*<input*/}
-                        {/*    type={`submit`}*/}
-                        {/*    className={`btn btn-primary`}*/}
-                        {/*    value={`Войти`}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        setAction(`signIn`);*/}
-                        {/*    }}*/}
-                        {/*/>*/}
+                        {authState.error ? (
+                            <div className={`sign-in-error-block`}>
+                                <div className={`sign-in-error-block__icon-block`}></div>
+                                <div>
+                                    <div className={`sign-in-error-block__title`}>Вход не вышел</div>
+                                    <div className={`sign-in-error-block__text`}>{authState.error}</div>
+                                </div>
+                            </div>
+                        ) : null}
+
+                        <label htmlFor={`login`} className={`label ${errors.login ? `label_error` : ``}`}>
+                            Логин
+                        </label>
+                        <input type={`text`} className={`form-control ${errors.login ? `form-control_error` : ``}`} name={`login`} ref={register({required: `Пожалуйста укажите логин`})} onChange={() => loginValidator()} />
+                        <label htmlFor={`sublogin`} className={`label label_optional`}>
+                            Сублогин
+                        </label>
+                        <input type={`text`} className={`form-control`} name={`sublogin`} autoComplete={`off`} ref={register} />
+                        <label htmlFor={`password`} className={`label ${errors.password ? `label_error` : ``}`}>
+                            Пароль
+                        </label>
+                        <input
+                            type={`password`}
+                            className={`form-control ${errors.password ? `form-control_error` : ``}`}
+                            name={`password`}
+                            ref={register({
+                                required: `Пожалуйста, укажите пароль`,
+                                pattern: {
+                                    value: /^[a-z0-9\s]+$/i,
+                                    message: `Только латиница и пробел`,
+                                },
+                            })}
+                        />
+                        <button type={`submit`} className={`login-form__btn btn btn_primary ${Object.keys(errors).length ? `btn_disabled` : ``}`}>
+                            <div className={`btn__content`}>
+                                {authState.loading ? (
+                                    <div className={`btn-loader`}>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                        <div className={`btn-loader__element`}></div>
+                                    </div>
+                                ) : (
+                                    <span>Войти</span>
+                                )}
+                            </div>
+                        </button>
                     </form>
                 </div>
-                <div className={`link-container`}>
+                <div className={`login-form-container__github-link-container`}>
                     <a className={`github-link`} href={`https://github.com/needforjamaica/sendsay.git`} target={`_blank`} rel={`noopener noreferrer`}>
                         github.com/needforjamaica/sendsay.git
                     </a>

@@ -1,7 +1,8 @@
-import {COMMON_SET_TITLE} from '../actions/actionTypes';
+import {COMMON_SET_TITLE, COMMON_SET_FULLSCREEN} from '../actions/actionTypes';
 
 const initialState = {
     pageTitle: `React by Igor Tomkovich`,
+    fullScreen: false,
 };
 
 export default (state = initialState, action) => {
@@ -9,7 +10,12 @@ export default (state = initialState, action) => {
         case COMMON_SET_TITLE:
             return {
                 ...state,
-                pageTitle: action.data,
+                pageTitle: action.payload,
+            };
+        case COMMON_SET_FULLSCREEN:
+            return {
+                ...state,
+                fullScreen: action.payload,
             };
         default:
             return state;
